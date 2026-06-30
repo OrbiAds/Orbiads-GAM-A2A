@@ -1,0 +1,21 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "GAM Inventory Sentinel",
+  "description": "Agent spécialisé Google Ad Manager (via OrbiAds) — vérifie la connexion GAM et surveille la disponibilité d'inventaire en lecture seule.",
+  "url": "REMPLACER_PAR_L_ENDPOINT_A2A",
+  "iconUrl": "https://orbiads.com/favicon-192.png",
+  "version": "1.0.0",
+  "provider": { "organization": "OrbiAds", "url": "https://orbiads.com" },
+  "capabilities": { "streaming": true },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [
+    {
+      "id": "inventory_health",
+      "name": "Surveillance d'inventaire GAM",
+      "description": "Se connecte à OrbiAds→GAM, vérifie l'état de connexion, inspecte les ad units et signale les unités à faible disponibilité ou non conformes (lecture seule).",
+      "tags": ["gam", "google-ad-manager", "inventory", "adops", "read-only"],
+      "examples": ["Vérifie ma connexion GAM et résume la disponibilité de mon inventaire premium."]
+    }
+  ]
+}

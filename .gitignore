@@ -1,0 +1,16 @@
+# Secrets & local env
+.env
+**/.env
+!**/.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# ADK local state
+**/.adk/
+*.session.db
+
+# Raw / unredacted captures (only captures/web/*.webp is published)
+captures/*.png
