@@ -1,8 +1,7 @@
-# Légendes des captures — bilingues (à coller dans la page Academy)
+# Screenshot captions — bilingual (to paste into the Academy page)
 
-Les images dans `web/` sont **neutres linguistiquement** (floutage + badge uniquement, aucun texte
-gravé). La légende vit dans la page Svelte via le ternaire `$locale` — comme les autres articles
-Academy (cf `gam-key-values-guide/+page.svelte`). Pattern :
+The images in `web/` are **language-neutral** (redaction + badge only, no baked-in text). The caption
+lives in the Svelte page via the `$locale` ternary — like the other Academy articles. Pattern:
 
 ```svelte
 <figure>
@@ -23,7 +22,6 @@ Academy (cf `gam-key-values-guide/+page.svelte`). Pattern :
 | `5bis-connecter-un-agent.webp` | *(overlay FR à refaire neutre — voir note)* Page « Connecter un agent » : on saisit un nom et l'URL de redirection de l'agent. | *(FR overlay to redo neutral — see note)* "Connect an agent" page: enter a name and the agent's redirect URL. |
 | `5bis-agent-cree.webp` | *(overlay FR à refaire neutre — voir note)* Le client est créé : `client_id` + secret affichés **une seule fois**, à copier immédiatement. | *(FR overlay to redo neutral — see note)* The client is created: `client_id` + secret shown **once only**, copy them immediately. |
 
-> **Note 5bis** : `5bis-connecter-un-agent.webp` et `5bis-agent-cree.webp` portent encore des **overlays
-> de texte en français** (flèches + explications gravées, demandés au départ). Pour le multilingue il faut
-> soit (a) les régénérer avec des **flèches/numéros neutres** + la légende dans la page, soit (b) produire
-> une **version par locale**. À trancher avant publication.
+> **Note 5bis**: `5bis-connecter-un-agent.webp` and `5bis-agent-cree.webp` are UI screenshots of the
+> OrbiAds product (the in-app language follows the user's locale). For a multilingual article, either
+> screenshot them in the target locale, or keep one locale and rely on the page caption for the rest.

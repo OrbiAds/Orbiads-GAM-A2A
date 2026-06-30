@@ -20,7 +20,7 @@ from google.adk.a2a.utils.agent_to_a2a import to_a2a
 load_dotenv()
 
 MCP_URL = os.environ.get("ORBIADS_MCP_URL", "https://orbiads.com/mcp")
-MODEL = os.environ.get("MODEL", "gemini-3.1-flash-lite")  # le plus économique pour les tests
+MODEL = os.environ.get("MODEL", "gemini-2.5-flash")  # sensible default; override in .env
 PORT = int(os.environ.get("PORT", os.environ.get("A2A_PORT", "10000")))  # Cloud Run injects PORT
 
 
@@ -102,17 +102,17 @@ def _resolve_access_token() -> str:
 CONNECTOR = os.environ.get("ORBIADS_CONNECTOR")  # projects/.../connectors/orbiads
 SCOPES = ["openid", "https://www.googleapis.com/auth/userinfo.email"]
 
-# --- LE CŒUR : "borner les skills" = tool_filter, centré sur LA CONNEXION ---
-# Étage 1 (agent→OrbiAds) = bearer ci-dessus. Étage 2 (OrbiAds→GAM) = ces outils
-# de connexion exposés par le MCP. C'est la seule partie OrbiAds-spécifique du tuto.
-# Confirmer les noms exacts via tools/list sur le MCP live.
+# --- THE CORE: "scoping the skills" = tool_filter, centered on THE CONNECTION ---
+# Layer 1 (agent->OrbiAds) = bearer above. Layer 2 (OrbiAds->GAM) = these connection
+# tools exposed by the MCP. This is the only OrbiAds-specific part of the tutorial.
+# Confirm the exact names via tools/list on the live MCP.
 CONNECTION_TOOLS = [
-    "get_my_tenant_id",     # qui suis-je / gamStatus
-    "check_credentials",    # état: NOT_CONNECTED / PENDING_NETWORK_SELECTION / CONNECTED_READY ...
-    "initiate_gam_auth",    # (re)connexion GAM si NOT_CONNECTED / DESYNC
-    "poll_auth_status",     # attendre la fin du flow OAuth GAM
-    "select_gam_network",   # choisir le networkCode si PENDING_NETWORK_SELECTION
-    "inventory",            # la tâche read-only une fois CONNECTED_READY
+    "get_my_tenant_id",     # who am I / gamStatus
+    "check_credentials",    # state: NOT_CONNECTED / PENDING_NETWORK_SELECTION / CONNECTED_READY ...
+    "initiate_gam_auth",    # (re)connect GAM if NOT_CONNECTED / DESYNC
+    "poll_auth_status",     # wait for the GAM OAuth flow to finish
+    "select_gam_network",   # pick the networkCode if PENDING_NETWORK_SELECTION
+    "inventory",            # the read-only task once CONNECTED_READY
 ]
 
 if CONNECTOR:

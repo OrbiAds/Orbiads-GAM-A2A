@@ -1,8 +1,8 @@
-"""Orchestrateur — découvre l'agent GAM (registry) puis lui délègue en A2A.
+"""Orchestrator — discovers the GAM agent (registry) then delegates to it over A2A.
 
-Reproduit le pattern de la vidéo « A2A & Agent Registry » :
-  registry_search_agents  → trouve "GAM Inventory Sentinel"
-  call_remote_a2a_agent   → RemoteA2aAgent délègue la tâche en A2A.
+Reproduces the "A2A & Agent Registry" pattern:
+  registry_search_agents  -> finds "GAM Inventory Sentinel"
+  call_remote_a2a_agent   -> RemoteA2aAgent delegates the task over A2A.
 """
 
 import os
@@ -12,7 +12,7 @@ from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 from google.adk.tools import FunctionTool
 from google.adk.integrations.agent_registry import AgentRegistry
 
-PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "orbiads-a2a-lab")
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "your-gcp-project")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 GAM_A2A_CARD = os.environ.get(
     "GAM_A2A_CARD_URL", "http://127.0.0.1:10010/.well-known/agent.json"
@@ -30,7 +30,7 @@ def registry_search_agents(need: str) -> list[dict]:
     ]
 
 
-# Le sous-agent distant appelé en A2A (le `call_remote_a2a_agent` de la vidéo).
+# The remote sub-agent called over A2A (the video's `call_remote_a2a_agent`).
 gam_remote = RemoteA2aAgent(
     name="gam_inventory_sentinel",
     description="Specialized GAM agent (inventory, read-only) reached over A2A.",

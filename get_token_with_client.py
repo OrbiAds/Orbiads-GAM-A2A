@@ -1,10 +1,10 @@
-"""Utilise un client OAuth CRÉÉ DEPUIS LA PAGE OrbiAds (pas de DCR) pour obtenir un token,
-puis appelle le MCP OrbiAds — preuve que l'agent créé par l'utilisateur fonctionne.
+"""Use an OAuth client CREATED FROM THE OrbiAds PAGE (no DCR) to obtain a token,
+then call the OrbiAds MCP — proof that the user-created agent works.
 
-Usage :
-    ORBIADS_CLIENT_ID=<client_id de la page>  [ORBIADS_CLIENT_SECRET=<secret>] \
+Usage:
+    ORBIADS_CLIENT_ID=<client_id from the page>  [ORBIADS_CLIENT_SECRET=<secret>] \
     python get_token_with_client.py
-Le Redirect URI de l'agent (sur la page) DOIT être http://localhost:8765/callback.
+The agent's Redirect URI (on the page) MUST be http://localhost:8765/callback.
 """
 import asyncio
 import base64
@@ -49,12 +49,12 @@ def main():
         "code_challenge": challenge, "code_challenge_method": "S256"})
     threading.Thread(target=http.server.HTTPServer(("localhost", 8765), _H).handle_request, daemon=True).start()
     import webbrowser; webbrowser.open(url)
-    print("Consentement ouvert dans le navigateur. URL si besoin :\n", url)
+    print("Consent opened in the browser. URL if needed:\n", url)
     for _ in range(120):
         if "code" in _hold: break
         time.sleep(1)
     if "code" not in _hold:
-        raise SystemExit("Pas de code reçu (timeout).")
+        raise SystemExit("No code received (timeout).")
     form = {"grant_type": "authorization_code", "code": _hold["code"], "redirect_uri": REDIRECT,
             "client_id": CLIENT_ID, "code_verifier": verifier}
     if CLIENT_SECRET:
@@ -63,7 +63,7 @@ def main():
                                  headers={"Content-Type": "application/x-www-form-urlencoded"})
     tok = json.loads(urllib.request.urlopen(req, timeout=30).read().decode())
     access = tok["access_token"]
-    print(f"\n[OK] Token obtenu via TON client ({CLIENT_ID[:8]}…). Appel d'OrbiAds…")
+    print(f"\n[OK] Token obtained via YOUR client ({CLIENT_ID[:8]}...). Calling OrbiAds...")
 
     async def call():
         from mcp import ClientSession

@@ -1,31 +1,30 @@
-# Orbiads-GAM-A2A — Agents A2A pour Google Ad Manager (via OrbiAds)
+# Orbiads-GAM-A2A — A2A agents for Google Ad Manager (via OrbiAds)
 
-Exemples **prêts à cloner et déployer** qui prouvent, de bout en bout : **créer un agent Google Ad
-Manager, le brancher sur OrbiAds (MCP), le déployer dans l'Agent Platform de Google (Vertex Agent
-Engine), le rendre découvrable en A2A, et composer des cas métier multi-agents — y compris le standard
-d'achat AdCP.**
+**Clone-and-deploy examples** proving the whole path, end to end: **build a Google Ad Manager agent,
+connect it to OrbiAds (MCP), deploy it to Google's Agent Platform (Vertex Agent Engine), make it
+A2A-discoverable, and compose multi-agent business cases — including the AdCP media-buy standard.**
 
-> Dépôt public d'accompagnement de la série d'articles **OrbiAds Academy « OrbiAds en A2A »**.
-> MCP = agent ↔ outils. A2A (Agent2Agent) = agent ↔ agent.
+> Companion repository for the **OrbiAds Academy "OrbiAds in A2A"** article series.
+> MCP = agent ↔ tools. A2A (Agent2Agent) = agent ↔ agent.
 
-## 👉 Le tutoriel
-**[TUTORIAL.md](./TUTORIAL.md)** — tutoriel complet, concret, **générique** (placeholders, aucun ID réel) :
-prérequis → projet/API → code de l'agent → connexion OAuth → déploiement Agent Engine → Agent Card /
-registre → A2A (orchestrateur) → cas métier multi-agents → **AdCP natif** → what's next → teardown.
+## 👉 The tutorial
+**[TUTORIAL.md](./TUTORIAL.md)** — complete, concrete, **generic** walkthrough (placeholders, no real IDs):
+prerequisites → project/APIs → agent code → OAuth connection → Agent Engine deployment → Agent Card /
+registry → A2A (orchestrator) → multi-agent business case → **native AdCP** → what's next → teardown.
 
-`agent-card.json` = modèle d'Agent Card A2A.
+`agent-card.json` = an A2A Agent Card template.
 
-## Les 4 agents (progression)
-| Dossier | Démontre | Partie |
+## The 4 agents (progression)
+| Folder | Demonstrates | Part |
 |---|---|---|
-| `gam_sentinel/` | 1 agent GAM A2A (instruction + MCP OrbiAds filtré), déployable Agent Engine | 2–5 |
-| `orchestrator/` | A2A : `registry_search_agents` → délégation vers `gam_sentinel` | 6–7 |
-| `gam_optimizer/` | Cas métier **3 agents async** : forecast ∥ format/CTR → synthèse | 8 |
-| `adcp_gateway/` | **AdCP natif** : buy agent → `create_media_buy` → `deals(adcp_validate)` puis `deals(adcp_preview)` → DealSpec GAM, **read-only** | 8bis |
+| `gam_sentinel/` | A single GAM A2A agent (instruction + filtered OrbiAds MCP), deployable to Agent Engine | 2–5 |
+| `orchestrator/` | A2A: `registry_search_agents` → delegation to `gam_sentinel` | 6–7 |
+| `gam_optimizer/` | Business case, **3 async agents**: forecast ∥ format/CTR → synthesis | 8 |
+| `adcp_gateway/` | **Native AdCP**: buy agent → `create_media_buy` → `deals(adcp_validate)` then `deals(adcp_preview)` → GAM DealSpec, **read-only** | 8bis |
 
-> Prompts en **anglais** ; chaque agent qui touche aux données fait un **NETWORK CHECK** (affiche le réseau
-> actif, s'arrête si inattendu). Le **modèle est un paramètre** (`MODEL` dans `.env`) — mets celui qui
-> convient à ton usage ; un gros JSON imbriqué (AdCP) peut nécessiter un modèle plus costaud que `flash`.
+> Agent prompts are in **English**; every agent that touches data runs a **NETWORK CHECK** (prints the
+> active network, stops if unexpected). The **model is a parameter** (`MODEL` in `.env`) — pick the one
+> that fits your use; a large nested JSON (AdCP) may need a stronger model than `flash`.
 
 ## Quickstart (local)
 ```bash
@@ -34,24 +33,24 @@ cd Orbiads-GAM-A2A
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# 1) Configure chaque agent : copie .env.example -> .env dans le dossier de l'agent
-cp gam_sentinel/.env.example gam_sentinel/.env       # idem pour les autres
-# Renseigne MODEL + ORBIADS_MCP_TOKEN (jeton obtenu via `python get_token.py`)
+# 1) Configure each agent: copy .env.example -> .env in the agent folder
+cp gam_sentinel/.env.example gam_sentinel/.env       # same for the others
+# Fill MODEL + ORBIADS_MCP_TOKEN (token obtained via `python get_token.py`)
 
-# 2) Lance l'UI de dev ADK (les 4 agents)
+# 2) Launch the ADK dev UI (all 4 agents)
 adk web .                                            # http://127.0.0.1:8000
 
-# ou sers l'agent GAM en A2A :
+# or serve the GAM agent over A2A:
 uvicorn gam_sentinel.agent:a2a_app --port 10000      # /.well-known/agent.json
 ```
 
-Obtenir un jeton OrbiAds : `python get_token.py` (DCR + PKCE + consentement) écrit le token dans `.env`.
-Voir la **Partie 3** du tutoriel.
+Get an OrbiAds token: `python get_token.py` (DCR + PKCE + consent) writes the token into `.env`.
+See **Part 3** of the tutorial.
 
-> ⚠️ Reste sur un **réseau GAM de test** (jamais un réseau client réel). Le réseau actif est un état
-> serveur : bascule via l'outil MCP `network(action='switch_network', ...)`. Les agents affichent le réseau
-> actif et s'arrêtent s'il est inattendu (NETWORK CHECK).
+> ⚠️ Stay on a **test GAM network** (never a real client network). The active network is server-side
+> state, switched via the MCP tool `network(action='switch_network', ...)`. Agents print the active
+> network and stop if it's unexpected (NETWORK CHECK).
 
-## Sécurité
-Les `.env` (jetons), les états `.adk/` et les captures brutes ne sont **pas** versionnés (cf `.gitignore`).
-Seules les captures floutées (`captures/web/*.webp`) sont publiées. Licence **MIT**.
+## Security
+`.env` files (tokens), `.adk/` state and raw screenshots are **not** versioned (see `.gitignore`).
+Only redacted screenshots (`captures/web/*.webp`) are published. **MIT** licensed.
