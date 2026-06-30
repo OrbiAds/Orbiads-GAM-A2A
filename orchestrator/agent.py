@@ -15,7 +15,7 @@ from google.adk.integrations.agent_registry import AgentRegistry
 PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "your-gcp-project")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 GAM_A2A_CARD = os.environ.get(
-    "GAM_A2A_CARD_URL", "http://127.0.0.1:10010/.well-known/agent.json"
+    "GAM_A2A_CARD_URL", "http://127.0.0.1:10000/.well-known/agent-card.json"
 )
 
 _reg = AgentRegistry(project_id=PROJECT, location=LOCATION)

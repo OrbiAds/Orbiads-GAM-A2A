@@ -117,7 +117,7 @@ root_agent = LlmAgent(
     tools=[orbiads],
 )
 
-# Expose the agent over A2A: serves /.well-known/agent.json + receives tasks
+# Expose the agent over A2A: serves /.well-known/agent-card.json + receives tasks
 a2a_app = to_a2a(root_agent, port=PORT)
 ```
 
@@ -319,7 +319,7 @@ Ref : <https://docs.cloud.google.com/agent-registry/register-agents> ·
 <https://docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-a2a-agent>
 
 > ⚠️ **Pitfall encountered** : `adk deploy agent_engine` on its own registers the agent as **`CUSTOM`** (API query), **without
-> an Agent Card** (`has card: False`) → not callable over A2A. You need an **Agent Card** (`/.well-known/agent.json`).
+> an Agent Card** (`has card: False`) → not callable over A2A. You need an **Agent Card** (`/.well-known/agent-card.json`).
 
 - **Auto** : deploy/serve an agent that exposes the Agent Card → the registry scans and indexes it.
 - **Console** : Gemini Enterprise → your app → **Agents → Add → Custom agent via A2A** → paste the Agent Card
@@ -327,7 +327,7 @@ Ref : <https://docs.cloud.google.com/agent-registry/register-agents> ·
 
 Serve the agent over A2A locally (the card is already built by `to_a2a`, Part 2) :
 ```bash
-uvicorn gam_sentinel.agent:a2a_app --port 10000     # carte : http://127.0.0.1:10000/.well-known/agent.json
+uvicorn gam_sentinel.agent:a2a_app --port 10000     # card: http://127.0.0.1:10000/.well-known/agent-card.json
 ```
 > ⚠️ **Pitfall encountered** : the card contains its own `url` (with a port). Serve the agent **on the same port**
 > as the one listed in the card, otherwise the A2A caller → `503: All connection attempts failed`.
@@ -355,7 +355,7 @@ def registry_search_agents(need: str) -> list[dict]:
 gam_remote = RemoteA2aAgent(
     name="gam_inventory_sentinel",
     description="GAM agent (inventory, read-only) reached over A2A.",
-    agent_card=os.environ.get("GAM_A2A_CARD_URL", "http://127.0.0.1:10000/.well-known/agent.json"),
+    agent_card=os.environ.get("GAM_A2A_CARD_URL", "http://127.0.0.1:10000/.well-known/agent-card.json"),
 )
 
 root_agent = LlmAgent(
@@ -366,7 +366,7 @@ root_agent = LlmAgent(
     sub_agents=[gam_remote],
 )
 ```
-`orchestrator/.env` : same `GOOGLE_*` + `MODEL` + `GAM_A2A_CARD_URL=http://127.0.0.1:10000/.well-known/agent.json`.
+`orchestrator/.env` : same `GOOGLE_*` + `MODEL` + `GAM_A2A_CARD_URL=http://127.0.0.1:10000/.well-known/agent-card.json`.
 Launch `gam_sentinel` (Part 6) **then** `adk web .` → `orchestrator` app : trace
 `registry_search_agents` → `transfer_to_agent` → response from the GAM agent.
 
@@ -523,7 +523,7 @@ via the `$locale` ternary. The FR/EN pairs ready to paste are in [`captures/capt
 | # | Illustrates (part) | Screen | `captures/web/` file |
 |---|---|---|---|
 | 1 | Agent **deployed in the Agent Platform** (P5) | Vertex AI console → Agent Runtime (agent listed, framework `google-adk`) | `01-agent-deploye-agent-platform.webp` — IDs blurred |
-| 2b | **The real A2A Agent Card** (P2/P6) | Browser : `http://127.0.0.1:10000/.well-known/agent.json` (card served by `to_a2a`) | `02b-agent-card-a2a.webp` |
+| 2b | **The real A2A Agent Card** (P2/P6) | Browser : `http://127.0.0.1:10000/.well-known/agent-card.json` (card served by `to_a2a`) | `02b-agent-card-a2a.webp` |
 | 3 | **OAuth consent** (P3) | Google "Select an account" screen + "signing back in" during `get_token.py` | `03-consentement-oauth-compte.webp` + `03b-consentement-oauth-autoriser.webp` — emails blurred |
 | 4 | **Inter-agent A2A communication** (P7) | `adk web` : `registry_search_agents` → `transfer_to_agent` → response from the GAM agent | `04-a2a-communication-inter-agents.webp` |
 | 5 | **Async multi-agent** (P8) | `adk web` : `specialists` (forecast ∥ format) → `synthesis_agent` | `05-multi-agents-async.webp` |

@@ -41,7 +41,7 @@ cp gam_sentinel/.env.example gam_sentinel/.env       # same for the others
 adk web .                                            # http://127.0.0.1:8000
 
 # or serve the GAM agent over A2A:
-uvicorn gam_sentinel.agent:a2a_app --port 10000      # /.well-known/agent.json
+uvicorn gam_sentinel.agent:a2a_app --port 10000      # /.well-known/agent-card.json
 ```
 
 Get an OrbiAds token: `python get_token.py` (DCR + PKCE + consent) writes the token into `.env`.

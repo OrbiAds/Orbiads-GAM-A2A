@@ -156,5 +156,5 @@ root_agent = LlmAgent(
     tools=[orbiads_mcp],
 )
 
-# --- A2A: auto-generates /.well-known/agent.json from the filtered tools ---
+# --- A2A: auto-generates /.well-known/agent-card.json from the filtered tools ---
 a2a_app = to_a2a(root_agent, port=PORT)
